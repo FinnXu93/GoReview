@@ -11,6 +11,10 @@ func TestArrayFun(t *testing.T) {
 	})
 }
 
+func TestSliceFun(t *testing.T) {
+	SliceFun()
+}
+
 func TestUpdateAll(t *testing.T) {
 	t.Run("updateAll", func(t *testing.T) {
 		slice1 := []int{1, 2, 3, 10, 10, 15, 10, 16, 17}
@@ -57,4 +61,26 @@ func TestUpdateLast(t *testing.T) {
 			fmt.Println("修改slice1失败, 错误是", err)
 		}
 	})
+}
+
+func TestDeleteFun(t *testing.T) {
+	t.Run("deleteFun", func(t *testing.T) {
+		slice1 := []int{1, 2, 3, 10, 10, 15, 10, 16, 3, 17}
+		oldValue1 := 10
+		oldValue2 := 3
+		err, newSlice := DeleteFun(slice1, oldValue1, oldValue2)
+		if err == nil {
+			fmt.Println("删除后的slice1是", newSlice)
+			fmt.Printf("删除后的slice1地址是%p\n", &newSlice)
+			fmt.Println("原始slice1是", slice1)
+			fmt.Printf("原始slice1地址是%p\n", &slice1)
+
+		} else {
+			fmt.Println("删除slice1失败, 错误是", err)
+		}
+	})
+}
+
+func TestMapFun(t *testing.T) {
+	MapFun()
 }

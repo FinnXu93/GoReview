@@ -36,7 +36,7 @@ func ArrayFun() {
 	fmt.Println("新数组:", arr1)
 }
 
-// 修改切片中所有满足条件的值
+// 在原始切片中修改切片中所有满足条件的值
 func UpdateAll[T comparable](slice1 []T, oldValu, newValue T) (err error, result []T) {
 	if len(slice1) == 0 {
 		return fmt.Errorf("slice1不能为空"), result
@@ -57,7 +57,7 @@ func UpdateAll[T comparable](slice1 []T, oldValu, newValue T) (err error, result
 
 }
 
-// 修改切片中满足条件的第一个值
+// 在原始切片中修改切片中满足条件的第一个值
 func UpdateFirst[T comparable](slice1 []T, oldValue, newValue T) (err error, result []T) {
 	if len(slice1) == 0 {
 		return fmt.Errorf("slice1不能为空"), result
@@ -78,7 +78,7 @@ func UpdateFirst[T comparable](slice1 []T, oldValue, newValue T) (err error, res
 	return nil, result
 }
 
-// 修改切片中满足条件的最后一个值
+// 在原始切片中修改切片中满足条件的最后一个值
 func UpdateLast[T comparable](slices1 []T, oldValue, newValue T) (err error, result []T) {
 	sliceLen := len(slices1)
 
@@ -103,8 +103,8 @@ func UpdateLast[T comparable](slices1 []T, oldValue, newValue T) (err error, res
 
 }
 
-// 删除切片中的满足条件的元素
-func DeleteFun[T comparable](slices1 []T, oldValue T) (err error, result []T) {
+// 在原始切片中删除切片中的所有满足条件的元素
+func DeleteFun[T comparable](slices1 []T, oldValues ...T) (err error, result []T) {
 
 	sliceLen := len(slices1)
 
@@ -118,10 +118,13 @@ func DeleteFun[T comparable](slices1 []T, oldValue T) (err error, result []T) {
 		}
 	}()
 
-	for i := sliceLen - 1; i >= 0; i-- {
-		if slices1[i] == oldValue {
-			slices1[i] = newValue
-			break
+	for _, oldValue := range oldValues {
+		i := 0
+		for _, value := range slices1 {
+			if value != oldValue {
+				slices1[i] = value
+				i++
+			}
 		}
 	}
 
@@ -148,6 +151,7 @@ func SliceFun() {
 	// 2. 切片赋值
 	slice1 = []int8{1, 3, 4, 2, 3, 4, 5, 2, 1, 9, 10}
 	fmt.Println("slice1:", slice1)
+	fmt.Printf("slice1地址是%p\n:", &slice1)
 
 	// 冒等式声明并赋值一个切片
 	slice2 := []string{"hello", "hello", "heel0", "hell0"}
@@ -156,4 +160,50 @@ func SliceFun() {
 	// 基于下标切片修改值
 	slice1[0] = 10
 	fmt.Println("修改第一个元素值后slice1:", slice1)
+
+	// 切片中追加元素
+	slice1 = append(slice1, 110)
+	fmt.Println("追加一个元素值后slice1:", slice1)
+	fmt.Printf("追加一个元素值后slice1地址是%p\n:", &slice1)
+
+	// 追加其他切片, 容量<1024，每次扩容追加1024，容量>1024，每次追加25%
+	/// append(slice1, []int8{1, 2, 3}...)中 ... 是切片展开，等于逐个添加
+	slice1 = append(slice1, []int8{1, 2, 3}...)
+	fmt.Println("追加多个值后slice1:", slice1)
+	fmt.Printf("追加多个元素值后slice1地址是%p\n:", &slice1)
+
+}
+
+// map映射
+func MapFun() {
+	/*
+		map是一个包含多个键值对的数据集合，类型表示 map[string|int]T
+			key必须是唯一的，可以是数字和字符串
+			value可以是任意数据类型包括函数/接口/结构体等
+		map声明后需要 make() 分配空间
+	*/
+	// 1.1 声明并分配空间给一个map
+	var map1 map[float64]int = make(map[float64]int, 3)
+	// 1.2 赋值
+	map1 = map[float64]int{3.14: 3, 365: 365}
+	fmt.Println("map1:", map1)
+
+	// 2. 冒等式声明并赋值一个map
+	map2 := map[bool]int{true: 1, false: 0}
+	fmt.Println("map2:", map2)
+
+	// map修改value
+	map1[3.14] = 5
+	fmt.Println("修改后key3.14的map1:", map1)
+
+	// map修改不存在的key的值，会做添加
+	map1[12] = 12
+	fmt.Println("修改key12的map1:", map1)
+
+	// 获取不存在的值,会返回value对应类型的默认值，如value是string，默认值是"""
+	fmt.Printf("获取map1中key为13的值:%#v\n", map1[13])
+
+	// 删除map中的某个key
+	delete(map2, false)
+
 }
